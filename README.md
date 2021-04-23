@@ -1,9 +1,15 @@
 # GoGame.Minimax.Qlearning
 A project for testing Go game AI players' strategies with Minimax, Qlearning and related methods
 
+# Running
+Play the game, run cmd:
+    
+    python play.py
+
+
 #Todo:
-- [ ] Step 1: Env
-- [ ] Step 2: Random player
+- [x] Step 1: Env
+- [x] Step 2: Random player
 - [ ] Step 3: Greedy player
 - [ ] Step 4: Minimax player 1 – Win loose score metrics
 - [ ] Step 5: Minimax player 2 – alphabeta-pruning
