@@ -1,5 +1,7 @@
 from copy import deepcopy
-from .constants import komi_value
+import sys
+sys.path.append('../')
+from environment.constants import komi_value
 
 """ Constants """
 black_stone = 1
@@ -123,7 +125,7 @@ class Board:
             Update the board with new state
         '''
         # TODO: check the state size // assert len(new_sate) == self.size
-        self.board.state = new_sate
+        self.state = new_sate
 
 
 """ Go Game """
@@ -146,7 +148,10 @@ class GO:
     def _copy_game(self):
         return deepcopy(self)
 
-    def get_possible_moves(self, piece_type):
+    def get_possible_placements(self, piece_type):
+        '''
+            Return all possible placement of this piece_type in the current board
+        '''
         moves = []
         for i in range(self.size):
             for j in range(self.size):
@@ -173,7 +178,7 @@ class GO:
             return False
 
         # Copy the board for testing
-        next_go = self.copy_game() # the game after making this placement
+        next_go = self._copy_game() # the game after making this placement
         next_board = next_go._board
 
         # Check if the place has liberty
@@ -237,7 +242,7 @@ class GO:
             return False
         board = self._board
         self._previous_board = deepcopy(board)
-        board[i][j] = stone_type
+        board.state[i][j] = stone_type
         self._board.update_state(board.state)
         return True
 
@@ -307,8 +312,8 @@ class Judge:
         :param: None.
         :return: piece type of winner of the game (0 if it's a tie).
         '''
-        black_score = self.compute_captured_stone(black_stone)
-        white_score = self.compute_captured_stone(white_stone)
+        black_score = self.compute_captured_stone(black_stone, board)
+        white_score = self.compute_captured_stone(white_stone, board)
         if black_score > white_score + self.komi: return black_stone
         elif black_score < white_score + self.komi: return white_stone
         else: return 0

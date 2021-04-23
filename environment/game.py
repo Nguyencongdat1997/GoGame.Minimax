@@ -1,5 +1,7 @@
-from .go import GO, white_stone, black_stone, actions
-from .base_player import BasePlayer
+import sys
+sys.path.append('../')
+from environment.go import GO, white_stone, black_stone, actions
+from players.base_player import BasePlayer
 
 class Game:
     def __init__(self, player1: BasePlayer, player2: BasePlayer, verbose=False):
@@ -15,15 +17,21 @@ class Game:
         self.winner = 0
 
     def run(self):
+        '''
+            Run a game. When it ends, return the winner.
+        :return:
+            return the stone type(black stone/white stone) of the winner
+            return 0 if this game is a tie.
+        '''
         if self.verbose:
             print('========Start new game========')
             while (not self.game_ended):
-                print('Step ' + self.go.count_moved + ':')
+                print('Step {}:'.format(self.go.count_moved))
                 self.step()
             print('========Game Ended========')
         else:
             while (not self.game_ended):
-                self.step
+                self.step()
         return self.winner
 
     def step(self):
@@ -32,6 +40,7 @@ class Game:
 
         player = self.black_player if self.turn == black_stone else self.white_player
         action, x,y = player.play(self.go) # TODO: write this
+        print('{}, {}, {}'.format('Pass' if action == actions['PASS'] else 'Place {}'.format('X' if self.turn == black_stone else 'O'), x, y))
 
         if action == actions['PLACE']:
             if not self.go.check_valid_placement(x, y, self.turn):
