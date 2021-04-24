@@ -1,5 +1,10 @@
+import datetime
+
 from players.random_player.random_player import RandomPlayer
+from players.greedy_player.greedy_player import GreedyPlayer
 from players.minimax_players.minimax_player import MinimaxPlayer
+from players.minimax_players.negamax_player import NegamaxPlayer
+from players.minimax_players.pvs_player import PVSPlayer
 from environment.game import  Game
 from environment.go import black_stone, white_stone
 
@@ -12,6 +17,8 @@ if __name__ == "__main__":
     count_played_games = 0
     count_black_wins = 0
     count_white_wins = 0
+
+    star_time = datetime.datetime.now()
     print('Running....')
     for i in range(number_of_game):
         game = Game(player1, player2, verbose=False)
@@ -28,4 +35,5 @@ if __name__ == "__main__":
                         count_white_wins)
               )
     print('Stopped....')
-
+    end_time = datetime.datetime.now()
+    print('After {} seconds'.format(end_time-star_time))
