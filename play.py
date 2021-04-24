@@ -1,5 +1,6 @@
 from players.random_player.random_player import RandomPlayer
 from players.minimax_players.minimax_player import MinimaxPlayer
+from players.greedy_player.greedy_player import GreedyPlayer
 from environment.game import  Game
 from environment.go import black_stone, white_stone
 
