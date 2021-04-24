@@ -5,13 +5,15 @@ from players.greedy_player.greedy_player import GreedyPlayer
 from players.minimax_players.minimax_player import MinimaxPlayer
 from players.minimax_players.negamax_player import NegamaxPlayer
 from players.minimax_players.pvs_player import PVSPlayer
+from players.q_players.mc_every_visit_qlearner.qlearner import QLearner
 from environment.game import  Game
 from environment.go import black_stone, white_stone
 
 if __name__ == "__main__":
-    number_of_game = 20
+    number_of_game = 50
 
-    player1 = MinimaxPlayer()
+    player1 = QLearner()
+    player1.load_params()
     player2 = RandomPlayer()
 
     count_played_games = 0
