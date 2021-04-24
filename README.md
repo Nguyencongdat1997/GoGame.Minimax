@@ -24,3 +24,6 @@ Play the game, run cmd:
     - [ ] Folder description
     - [ ] A sample gif of a Game
     - [ ] A Comparision table
+        - [ ] Win/lose & Time spent between players
+        - [ ] Win/lose between extra-strategies(score metric, game start)
+        - [ ] Win/lose & Time spent between hyper-params config(depth search, branching factor) of each player
