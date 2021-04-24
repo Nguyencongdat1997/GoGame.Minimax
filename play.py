@@ -4,6 +4,7 @@ from players.random_player.random_player import RandomPlayer
 from players.greedy_player.greedy_player import GreedyPlayer
 from players.minimax_players.minimax_player import MinimaxPlayer
 from players.minimax_players.negamax_player import NegamaxPlayer
+from players.minimax_players.pvs_player import PVSPlayer
 from environment.game import  Game
 from environment.go import black_stone, white_stone
 
