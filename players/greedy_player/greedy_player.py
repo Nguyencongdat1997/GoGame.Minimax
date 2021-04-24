@@ -10,7 +10,7 @@ NEGATIVE_INFI = -10000
 class GreedyPlayer(BasePlayer):
     def __init__(self):
         super(GreedyPlayer, self).__init__()
-        self.type = 'greedy'
+        self.type = 'Greedy'
 
     def play(self, go: GO):
         possible_placements = []

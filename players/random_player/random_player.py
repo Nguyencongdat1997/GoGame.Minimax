@@ -8,7 +8,7 @@ from players.base_player import BasePlayer
 class RandomPlayer(BasePlayer):
     def __init__(self):
         super(RandomPlayer, self).__init__()
-        self.type = 'random'
+        self.type = 'Random'
 
     def play(self, go_game: GO):
         '''

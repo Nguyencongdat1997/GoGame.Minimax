@@ -11,7 +11,7 @@ POSITIVE_INFI = 10000
 class MinimaxPlayer(BasePlayer):
     def __init__(self):
         super(MinimaxPlayer, self).__init__()
-        self.type = 'minimax'
+        self.type = 'Minimax'
 
         self.depth_limit = 3
         self.braching_factor_limit = 20
@@ -28,7 +28,7 @@ class MinimaxPlayer(BasePlayer):
     def __evaluation_func(self, go_game:GO, stone_type):
         '''
             Evaluation func is used to score the resulted board when reaching limited depth of the search but the game has not ended.
-            This need to satisfy the characteristics of a Zero-Sum Game
+            This needs to satisfy the characteristics of a Zero-Sum Game
 
             Here we use the reward function. That function will return 1 when the stone_type win, -1 when it is defeated and 0 when there is a tie
         :param go_game: current state of the game
@@ -39,7 +39,7 @@ class MinimaxPlayer(BasePlayer):
     def __reward_func(self, go_game: GO, stone_type):
         '''
             The reward function is used to score the result when the game ends.
-            This need to satisfy the characteristics of a Zero-Sum Game
+            This needs to satisfy the characteristics of a Zero-Sum Game
 
             Here we use the reward function. That function will return 1 when the stone_type win, -1 when it is defeated and 0 when there is a tie
         :param go_game: current state of the game
@@ -83,7 +83,7 @@ class MinimaxPlayer(BasePlayer):
                 next_piece_type = 3 - stone_type  # reverse turn
                 value, _ = self.minimax(cur_go, next_piece_type, depth - 1, not is_maximizer, alpha, beta)
                 value *= -1
-                if value >= best_value:  # TODO: find a way to remove "=" because PASS is less expensive than any MOVE
+                if value >= best_value:
                     best_value = value
                     best_move = move
                 if best_value >= beta:
