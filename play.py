@@ -1,11 +1,12 @@
 from players.random_player.random_player import RandomPlayer
+from players.minimax_players.minimax_player import MinimaxPlayer
 from environment.game import  Game
 from environment.go import black_stone, white_stone
 
 if __name__ == "__main__":
-    number_of_game = 1
+    number_of_game = 20
 
-    player1 = RandomPlayer()
+    player1 = MinimaxPlayer()
     player2 = RandomPlayer()
 
     count_played_games = 0
@@ -13,7 +14,7 @@ if __name__ == "__main__":
     count_white_wins = 0
     print('Running....')
     for i in range(number_of_game):
-        game = Game(player1, player2, verbose=True)
+        game = Game(player1, player2, verbose=False)
         winner = game.run()
         if winner == black_stone:
             count_black_wins += 1

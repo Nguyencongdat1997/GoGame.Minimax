@@ -145,7 +145,7 @@ class GO:
     def _get_opponent_type(self, piece_type):
         return 3 - piece_type
 
-    def _copy_game(self):
+    def copy_game(self):
         return deepcopy(self)
 
     def get_possible_placements(self, piece_type):
@@ -178,7 +178,7 @@ class GO:
             return False
 
         # Copy the board for testing
-        next_go = self._copy_game() # the game after making this placement
+        next_go = self.copy_game() # the game after making this placement
         next_board = next_go._board
 
         # Check if the place has liberty
@@ -212,7 +212,7 @@ class GO:
             return True
         # Case 2: two players all pass the move.
         if move==actions['PASS'] and self._board.compare_board(self._previous_board)==True :
-            print("Double pass by", stone_type)
+            print("Double pass by {}".format('X' if stone_type == black_stone else '0'))
             return True
         return False
 

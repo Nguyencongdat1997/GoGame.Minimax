@@ -40,7 +40,8 @@ class Game:
 
         player = self.black_player if self.turn == black_stone else self.white_player
         action, x,y = player.play(self.go) # TODO: write this
-        print('{}, {}, {}'.format('Pass' if action == actions['PASS'] else 'Place {}'.format('X' if self.turn == black_stone else 'O'), x, y))
+        if self.verbose:
+            print('{}, {}, {}'.format('Pass' if action == actions['PASS'] else 'Place {}'.format('X' if self.turn == black_stone else 'O'), x, y))
 
         if action == actions['PLACE']:
             if not self.go.check_valid_placement(x, y, self.turn):
