@@ -16,7 +16,7 @@ Play the game, run cmd:
 - [ ] Step 6: Minimax player 3 – Custom score metrics  
 - [ ] Step 7: Minimax player 4 – Stored param
 - [x] Step 8: Negamax player 
-- [ ] Step 9: pvsplayer
+- [x] Step 9: PVS player
 - [ ] Step 10: Starting moves
 - [ ] Step 11: Qlearner – Qtable
 - [ ] Step 12: Qlearner – DQLearning
