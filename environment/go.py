@@ -145,6 +145,9 @@ class GO:
     def _get_opponent_type(self, piece_type):
         return 3 - piece_type
 
+    def get_board(self):
+        return self._board
+
     def copy_game(self):
         return deepcopy(self)
 

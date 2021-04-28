@@ -2,6 +2,7 @@ import sys
 sys.path.append('../')
 from environment.go import GO, white_stone, black_stone, actions
 from players.base_player import BasePlayer
+from utils.encode_game_state import encode_game_state
 
 class Game:
     def __init__(self, player1: BasePlayer, player2: BasePlayer, verbose=False):
@@ -15,6 +16,8 @@ class Game:
         self.turn = black_stone
         self.game_ended = False
         self.winner = 0
+
+        self.history = {'black':[], 'white':[]}
 
     def run(self):
         '''
@@ -36,7 +39,7 @@ class Game:
 
     def step(self):
         if self.game_ended:
-            return
+            return actions['PASS'], -1, --1
 
         player = self.black_player if self.turn == black_stone else self.white_player
         action, x,y = player.play(self.go) # TODO: write this
@@ -50,7 +53,7 @@ class Game:
                 print('The winner is {}'.format('X' if winner==black_stone else 'O'))
                 self.game_ended = True
                 self.winner = winner
-                return
+                return None, None, None
             else:
                 self.go.move_forward(actions['PLACE'], (x,y), self.turn)
 
@@ -68,9 +71,20 @@ class Game:
                     print('The winner is {}'.format('X' if winner == black_stone else 'O'))
             self.game_ended = True
             self.winner = winner
-            return
         else:
             self.turn = 3-self.turn
-            return
+        return action, x,y
 
+    def encode_state(self):
+        game_state = self.go.get_board().state
+        return encode_game_state(game_state, self.turn)
 
+    def train(self):
+        while (not self.game_ended):
+            game_state_encoded = self.encode_state()
+            action, x,y = self.step()
+            if self.turn == black_stone:
+                self.history['black'].append((game_state_encoded, action, x, y))
+            else:
+                self.history['white'].append((game_state_encoded, action, x, y))
+        return self.winner, self.history
