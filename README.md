@@ -18,7 +18,7 @@ Play the game, run cmd:
 - [x] Step 8: Negamax player 
 - [x] Step 9: PVS player
 - [ ] Step 10: Starting moves
-- [ ] Step 11: Qlearner – Qtable
+- [x] Step 11: Qlearner – Qtable
 - [ ] Step 12: Qlearner – DQLearning
 - [ ] Step 13: Testing & Visualize
     - [ ] Folder description
