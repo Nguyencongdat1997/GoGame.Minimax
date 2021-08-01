@@ -16,6 +16,9 @@ if __name__ == "__main__":
     player1.load_params()
     player2 = RandomPlayer()
 
+    # player1 = MinimaxPlayer()
+    # player2 = RandomPlayer()
+
     count_played_games = 0
     count_black_wins = 0
     count_white_wins = 0
@@ -30,8 +33,10 @@ if __name__ == "__main__":
         if winner == white_stone:
             count_white_wins += 1
         count_played_games += 1
-        print('{} games have been played. Current ratio: {}/{}/{}'
+        print('{} games have been played between {} as X and {} as O. Current ratio X-tie-O: {}/{}/{}'
                 .format(count_played_games,
+                        player1.type,
+                        player2.type,
                         count_black_wins,
                         count_played_games-count_black_wins-count_white_wins,
                         count_white_wins)
