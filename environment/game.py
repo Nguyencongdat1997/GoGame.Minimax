@@ -2,7 +2,7 @@ import sys
 sys.path.append('../')
 from environment.go import GO, white_stone, black_stone, actions
 from players.base_player import BasePlayer
-from utils.encode_game_state import encode_game_state
+
 
 class Game:
     def __init__(self, player1: BasePlayer, player2: BasePlayer, verbose=False):
@@ -75,16 +75,12 @@ class Game:
             self.turn = 3-self.turn
         return action, x,y
 
-    def encode_state(self):
-        game_state = self.go.get_board().state
-        return encode_game_state(game_state, self.turn)
-
     def train(self):
         while (not self.game_ended):
-            game_state_encoded = self.encode_state()
+            game_board = self.go.get_board().state
             action, x,y = self.step()
             if self.turn == black_stone:
-                self.history['black'].append((game_state_encoded, action, x, y))
+                self.history['black'].append((game_board, self.turn, action, x, y))
             else:
-                self.history['white'].append((game_state_encoded, action, x, y))
+                self.history['white'].append((game_board, self.turn, action, x, y))
         return self.winner, self.history
