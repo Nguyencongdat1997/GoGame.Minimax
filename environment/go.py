@@ -146,7 +146,7 @@ class GO:
         return 3 - piece_type
 
     def get_board(self):
-        return self._board
+        return deepcopy(self._board)
 
     def copy_game(self):
         return deepcopy(self)
