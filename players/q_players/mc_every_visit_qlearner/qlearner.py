@@ -9,9 +9,10 @@ import sys
 sys.path.append('../../../')
 from players.q_players.base_learner import BaseLearner
 from environment.go import GO, actions
-from utils.encode_game_state import encode_game_state
+
 
 NEGATIVE_INFI = -10000
+
 
 class QLearner(BaseLearner):
     def __init__(self, param_file='./data/qtable.csv'):
@@ -24,8 +25,8 @@ class QLearner(BaseLearner):
         self.learn_step = 0
 
     def play(self, go_game:GO):
-        state = go_game.get_board().state
-        game_state_encoded = encode_game_state(state, self.stone_type)
+        game_board = go_game.get_board().state
+        game_state_encoded = self.encode_state(game_board, self.stone_type)
 
         if not(game_state_encoded in self.q_table):
             return self.play_greedy(go_game)
@@ -41,7 +42,7 @@ class QLearner(BaseLearner):
                     action_encoded = self.encode_action(actions['PLACE'], move, go_game.size)
                     value = values[action_encoded]
                     if value >= best_value:
-                        best_value =  value
+                        best_value = value
                         best_move = move
                 return actions['PLACE'], best_move[0], best_move[1]
 
@@ -95,10 +96,11 @@ class QLearner(BaseLearner):
         value = reward
         for step in reversed_history:
             self.learn_step += 1
-            game_state_encoded, action, x, y = step
+            game_board, player_stone, action, x, y = step
             action_encoded = self.encode_action(action, (x, y), board_size)
+            state_encoded = self.encode_state(game_board, player_stone)
 
-            old_value = self._get_value(game_state_encoded, action_encoded)
+            old_value = self._get_value(state_encoded, action_encoded)
 
             # # TODO: update from this V value to Q value
             # if max_q_value_in_next_step < 0: # if in last step, update directly
@@ -110,7 +112,7 @@ class QLearner(BaseLearner):
             value *= self.gamma
             new_value = (1 - self.alpha) * old_value + self.alpha * value
 
-            self._save_value(game_state_encoded, action_encoded, new_value, board_size=board_size)
+            self._save_value(state_encoded, action_encoded, new_value, board_size=board_size)
         #print('Learned steps:', self.learn_step)
 
     def store_params(self):
@@ -135,3 +137,25 @@ class QLearner(BaseLearner):
         else:
             self.q_table = {}
 
+    def encode_action(self, action, move, board_size):
+        if action == actions['PASS']:
+            return board_size**2
+        return move[0]*board_size + move[1]
+
+    def decode_action(self, action, board_size):
+        '''
+
+        :param action: a number, in range [0; board_size^2]
+        :return: action_type, positon x, position y
+        '''
+        if action == board_size ** 2:
+            return actions['PASS'], -1, -1
+        else:
+            y = action % board_size
+            x = (int) ((action-y)/board_size)
+            return action['PLACE'], x, y
+
+    def encode_state(self, board, stone_type):
+        txt_state = ''.join([str(y) for x in board for y in x])
+        txt_state += str(stone_type)
+        return txt_state

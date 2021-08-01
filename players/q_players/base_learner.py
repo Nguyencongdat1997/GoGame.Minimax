@@ -21,20 +21,17 @@ class BaseLearner(BasePlayer):
     def load_params(self):
         pass
 
+    @abstractmethod
     def encode_action(self, action, move, board_size):
-        if action == actions['PASS']:
-            return board_size**2
-        return move[0]*board_size + move[1]
+        pass
 
+    @abstractmethod
     def decode_action(self, action, board_size):
-        '''
+        pass
 
-        :param action: a number, in range [0; board_size^2]
-        :return: action_type, positon x, position y
-        '''
-        if action == board_size ** 2:
-            return actions['PASS'], -1, -1
-        else:
-            y = action % board_size
-            x = (int) ((action-y)/board_size)
-            return action['PLACE'], x, y
+    @abstractmethod
+    def encode_state(self, board, stone_type):
+        pass
+
+    def decode_state(self, encoded_state):
+        pass
