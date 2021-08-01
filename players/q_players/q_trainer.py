@@ -16,6 +16,7 @@ class QTrainer:
     def __init__(self, learning_player:BaseLearner, learner_stone=black_stone, opponent_player=None, test_player=None):
         self.learning_player = learning_player
         self.opponent_player = opponent_player if opponent_player != None else GreedyPlayer()
+        self.opponent_player = opponent_player if opponent_player != None else RandomPlayer()
         self.test_player = opponent_player if opponent_player != None else GreedyPlayer()
         self.learner_stone = learner_stone
 

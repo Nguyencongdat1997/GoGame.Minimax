@@ -6,6 +6,7 @@ from environment.go import actions, GO
 class BasePlayer(ABC):
     def __init__(self):
         super(BasePlayer, self).__init__()
+        self.type = 'Not_defined'
 
     @abstractmethod
     def play(self, go_game: GO):

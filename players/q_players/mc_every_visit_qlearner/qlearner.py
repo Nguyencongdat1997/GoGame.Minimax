@@ -17,6 +17,7 @@ NEGATIVE_INFI = -10000
 class QLearner(BaseLearner):
     def __init__(self, param_file='./data/qtable.csv'):
         super(QLearner, self).__init__()
+        self.type = 'QTable_player'
         self.stored_file = param_file
         self.alpha = .3
         self.gamma = .4
@@ -29,7 +30,8 @@ class QLearner(BaseLearner):
         game_state_encoded = self.encode_state(game_board, self.stone_type)
 
         if not(game_state_encoded in self.q_table):
-            return self.play_greedy(go_game)
+            # return self.play_greedy(go_game)
+            return self.play_random(go_game)
         else:
             values = self.q_table[game_state_encoded]
             possible_placements = go_game.get_possible_placements(self.stone_type)
@@ -113,7 +115,7 @@ class QLearner(BaseLearner):
             new_value = (1 - self.alpha) * old_value + self.alpha * value
 
             self._save_value(state_encoded, action_encoded, new_value, board_size=board_size)
-        #print('Learned steps:', self.learn_step)
+        # print('Learned steps:', self.learn_step)
 
     def store_params(self):
         # with open(self.stored_file, 'w') as f:
