@@ -12,9 +12,9 @@ from environment.go import black_stone, white_stone
 if __name__ == "__main__":
     number_of_game = 50
 
-    player1 = QLearner()
+    player1 = QLearner(backup_strategy='greedy')
     player1.load_params()
-    player2 = RandomPlayer()
+    player2 = GreedyPlayer()
 
     # player1 = MinimaxPlayer()
     # player2 = RandomPlayer()

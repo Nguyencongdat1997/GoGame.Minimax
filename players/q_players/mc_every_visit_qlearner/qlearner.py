@@ -15,13 +15,14 @@ NEGATIVE_INFI = -10000
 
 
 class QLearner(BaseLearner):
-    def __init__(self, param_file='./data/qtable.csv'):
+    def __init__(self, param_file='./data/qtable.csv', backup_strategy='random'):
         super(QLearner, self).__init__()
         self.type = 'QTable_player'
         self.stored_file = param_file
         self.alpha = .3
         self.gamma = .4
         self.q_table = {}
+        self.backup_strategy = backup_strategy
 
         self.learn_step = 0
 
@@ -30,7 +31,8 @@ class QLearner(BaseLearner):
         game_state_encoded = self.encode_state(game_board, self.stone_type)
 
         if not(game_state_encoded in self.q_table):
-            # return self.play_greedy(go_game)
+            if self.backup_strategy == 'greedy':
+                return self.play_greedy(go_game)
             return self.play_random(go_game)
         else:
             values = self.q_table[game_state_encoded]
@@ -122,8 +124,6 @@ class QLearner(BaseLearner):
         #     for key in self.q_table.keys():
         #         f.write("%s,%s\n" % (key, self.q_table[key]))
         df = pd.DataFrame({key: pd.Series(value) for key, value in self.q_table.items()})
-        if not os.path.exists(self.stored_file):
-            os.mkdir('./data')
         df.to_csv(self.stored_file, encoding='utf-8', index=False)
 
     def load_params(self, param_file=None):
@@ -132,7 +132,7 @@ class QLearner(BaseLearner):
         # with open(param_file, mode='r') as infile:
         #     reader = csv.reader(infile)
         #     self.q_table = {rows[0]: rows[1] for rows in reader}3
-        if os.path.exists(self.stored_file):
+        if os.path.exists(param_file):
             df = pd.read_csv(param_file)
             df = df.apply(lambda x: list(x)).to_dict()
             self.q_table = df

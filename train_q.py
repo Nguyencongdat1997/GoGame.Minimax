@@ -4,7 +4,7 @@ from environment.go import black_stone, white_stone
 
 if __name__ == "__main__":
     qlearner = QLearner()
-    # qtrainer = QTrainer(qlearner)
+    qtrainer = QTrainer(qlearner)
+    qtrainer.train(30000)
+    # qtrainer = QTrainer(qlearner, learner_stone=white_stone)
     # qtrainer.train(20)
-    qtrainer = QTrainer(qlearner, learner_stone=white_stone)
-    qtrainer.train(20)
