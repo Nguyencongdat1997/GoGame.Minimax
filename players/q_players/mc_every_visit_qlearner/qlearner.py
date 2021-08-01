@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from abc import ABC, abstractmethod
 import random
+import os
 
 import sys
 sys.path.append('../../../')
@@ -18,8 +19,9 @@ class QLearner(BaseLearner):
         self.stored_file = param_file
         self.alpha = .3
         self.gamma = .4
-
         self.q_table = {}
+
+        self.learn_step = 0
 
     def play(self, go_game:GO):
         state = go_game.get_board().state
@@ -92,6 +94,7 @@ class QLearner(BaseLearner):
         max_q_value_in_next_step = -1.0
         value = reward
         for step in reversed_history:
+            self.learn_step += 1
             game_state_encoded, action, x, y = step
             action_encoded = self.encode_action(action, (x, y), board_size)
 
@@ -108,12 +111,15 @@ class QLearner(BaseLearner):
             new_value = (1 - self.alpha) * old_value + self.alpha * value
 
             self._save_value(game_state_encoded, action_encoded, new_value, board_size=board_size)
+        #print('Learned steps:', self.learn_step)
 
     def store_params(self):
         # with open(self.stored_file, 'w') as f:
         #     for key in self.q_table.keys():
         #         f.write("%s,%s\n" % (key, self.q_table[key]))
         df = pd.DataFrame({key: pd.Series(value) for key, value in self.q_table.items()})
+        if not os.path.exists(self.stored_file):
+            os.mkdir('./data')
         df.to_csv(self.stored_file, encoding='utf-8', index=False)
 
     def load_params(self, param_file=None):
@@ -121,7 +127,11 @@ class QLearner(BaseLearner):
             param_file = self.stored_file
         # with open(param_file, mode='r') as infile:
         #     reader = csv.reader(infile)
-        #     self.q_table = {rows[0]: rows[1] for rows in reader}
-        df = pd.read_csv(param_file)
-        df = df.apply(lambda x: list(x)).to_dict()
-        self.q_table = df
+        #     self.q_table = {rows[0]: rows[1] for rows in reader}3
+        if os.path.exists(self.stored_file):
+            df = pd.read_csv(param_file)
+            df = df.apply(lambda x: list(x)).to_dict()
+            self.q_table = df
+        else:
+            self.q_table = {}
+

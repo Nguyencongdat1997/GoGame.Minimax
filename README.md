@@ -4,6 +4,10 @@ A project for testing Go game AI players' strategies with Minimax, Qlearning and
 Play the game, run cmd:
     
     python play.py
+    
+Train q-players, run cmd:
+    
+    python train_q.py
 
 
 #Todo:
