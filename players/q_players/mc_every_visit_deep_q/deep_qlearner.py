@@ -38,17 +38,21 @@ class DeepQLearner(BaseLearner):
         super(DeepQLearner, self).__init__()
         self.type = 'DQN_player'
         self.train_dir = train_dir
+        self.backup_strategy = backup_strategy
         self.learned_step_counter = 0
 
         n_actions = board_size ** 2+1
         gamma = 0.99
+        beta = 0.99
+        alpha = 0.3
         epsilon_start = 1.0
         epsilon_dec = 1e-3
         epsilon_end = 0.01
         lr = 0.05
 
-        self.action_space = [i for i in range(n_actions)]
-        self.gamma = gamma
+        self.gamma = gamma # coefficient for next_Q value
+        self.alpha = alpha # coefficient for updating new Q
+        self.beta = beta # coefficient for accumulated reward
         self.epsilon = epsilon_start
         self.epsilon_dec = epsilon_dec
         self.epsilon_end = epsilon_end
@@ -112,22 +116,39 @@ class DeepQLearner(BaseLearner):
         return actions['PLACE'], best_move[0], best_move[1]
 
     def learn(self, episode_history, reward, board_size):
-        # reversed_history = episode_history
-        # reversed_history.reverse()
-        #
-        # max_q_value_in_next_step = -1.0
-        # value = reward
-        # for step in reversed_history:
-        #     self.learn_step += 1
-        #     game_board, player_stone, action, x, y = step
-        #     action_encoded = self.encode_action(action, (x, y), board_size)
-        #     state_encoded = self.encode_state(game_board, player_stone)
-        #     old_value = self._get_value(state_encoded, action_encoded)
-        #     value *= self.gamma
-        #     new_value = (1 - self.alpha) * old_value + self.alpha * value
-        #     self._save_value(state_encoded, action_encoded, new_value, board_size=board_size)
-        pass
-        # print('Learned steps:', self.learn_step)
+        reversed_history = episode_history
+        reversed_history.reverse()
+
+        accumulated_reward = reward
+        states_encoded = []
+        actions_encoded = []
+        rewards = []
+        for step in range(len(reversed_history)):
+            game_board, player_stone, action, x, y = reversed_history[step]
+            state_encoded = self.encode_state(game_board, player_stone)
+            states_encoded.append(state_encoded)
+            action_encoded = self.encode_action(action, x, y)
+            actions_encoded.append(action_encoded)
+            accumulated_reward *= self.gamma
+            rewards.append(accumulated_reward)
+
+        states_encoded = np.array(states_encoded)
+        q_pred = self.q(states_encoded)
+        q_target = q_pred.numpy()
+        max_next_actions = tf.math.argmax(q_pred, axis=1)
+        for i in range(len(reversed_history)):
+            if i > 0:
+                max_q_next = rewards[i] + self.beta * q_pred[i-1, max_next_actions[i-1]]
+            else:
+                max_q_next = rewards[i]
+            q_target[i, actions_encoded[i]] = (1 - self.alpha) * q_target[i, actions_encoded[i]] \
+                                              + self.alpha * max_q_next
+
+        self.q.train_on_batch(states_encoded, q_target)
+
+        self.learned_step_counter += len(episode_history)
+        self.epsilon = max(self.epsilon - self.epsilon_dec, self.epsilon_end)
+        # print('Learned steps:', self.learned_step_counter)
 
     def store_params(self):
         file_name = self.train_dir + '/dqn_' + str(self.learned_step_counter) + '/model'
