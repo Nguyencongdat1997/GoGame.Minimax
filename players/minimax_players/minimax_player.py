@@ -24,7 +24,6 @@ class MinimaxPlayer(BasePlayer):
         else:
             return actions['PLACE'], best_move[0], best_move[1]
 
-
     def __evaluation_func(self, go_game:GO, stone_type):
         '''
             Evaluation func is used to score the resulted board when reaching limited depth of the search but the game has not ended.
