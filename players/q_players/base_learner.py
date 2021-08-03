@@ -10,7 +10,7 @@ class BaseLearner(BasePlayer):
         self.q_table = {}
 
     @abstractmethod
-    def learn(self, episode_history):
+    def learn(self, episode_history, reward, board_size):
         pass
 
     @abstractmethod

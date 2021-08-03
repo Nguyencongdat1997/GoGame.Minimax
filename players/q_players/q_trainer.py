@@ -15,12 +15,12 @@ from players.q_players.mc_every_visit_qlearner.qlearner import QLearner
 class QTrainer:
     def __init__(self, learning_player:BaseLearner, learner_stone=black_stone, opponent_player=None, test_player=None):
         self.learning_player = learning_player
-        self.opponent_player = opponent_player if opponent_player != None else GreedyPlayer()
-        self.test_player = opponent_player if opponent_player != None else GreedyPlayer()
+        self.opponent_player = opponent_player if opponent_player != None else RandomPlayer()
+        self.test_player = test_player if test_player != None else RandomPlayer()
         self.learner_stone = learner_stone
 
         self.train_batch_test = 200
-        self.batch_test = 5
+        self.batch_test = 10
         self.train_batch_save = 1000
 
     def train(self, iterations=1):
@@ -57,12 +57,10 @@ class QTrainer:
 
             if (iteration+1) % self.train_batch_test == 0:
                 self.test(self.batch_test)
-                # print('Number of trained states: ', len(self.learning_player.q_table))
             if (iteration+1) % self.train_batch_save == 0:
                 self.learning_player.store_params()
 
-        # print(len(self.learning_player.q_table), self.learning_player.q_table)
-        # self.learning_player.store_params()
+        self.learning_player.store_params()
 
     def test(self, iterations=1):
         print('-- Testing....')
@@ -88,4 +86,7 @@ class QTrainer:
                           count_played_games - count_black_wins - count_white_wins,
                           count_white_wins)
                   )
+            print('---- Win rate: {}/{}'
+                  .format(count_white_wins if self.learner_stone==white_stone else count_black_wins,
+                          count_played_games))
         print('-- Test Stopped....')
